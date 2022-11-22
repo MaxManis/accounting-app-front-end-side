@@ -1,0 +1,9 @@
+.logo {
+    object-fit: contain;
+    height: 50px;
+    display: flex;
+}
+
+.d--flex {
+    display: flex;
+}
