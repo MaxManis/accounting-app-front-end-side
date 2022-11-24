@@ -19,7 +19,7 @@ export const AboutProject: React.FC = () => {
             <div className="control">
                 <div className="tags has-addons">
                     <span className="tag is-dark">XPNS</span>
-                    <span className="tag is-success">v0.6.4</span>
+                    <span className="tag is-success">v0.7.8</span>
                 </div>
             </div>
 
@@ -36,11 +36,11 @@ export const AboutProject: React.FC = () => {
 
                 <div className="content article-body">
                     <p>
-                    Welcome to XPNS! In this article I will try to explain what is the goal of XPNS and why should you start 
+                    Welcome to XPNS! In this article I will try to explain what is the goal of XPNS and why should you start
                     to use it now!
                     </p>
                     <p>
-                    XPNS is a quite simple web application to store the information about your expenses and helps you to manage your budget. You can add each of your expense and in the end of month you will be able to see how much money did you spend. 
+                    XPNS is a quite simple web application to store the information about your expenses and helps you to manage your budget. You can add each of your expense and in the end of month you will be able to see how much money did you spend.
                     </p>
                     <p>
                     It’s something each of us do every day, after a shopping we put the check into the pocket and then we realize our pocket is full of paper. XPNS could help you with this problem. Just send us an invitation about the expense and we will do the rest. No more paper notes, checks and calculators.
@@ -58,7 +58,7 @@ export const AboutProject: React.FC = () => {
 
                     <h3 className="has-text-centered">About technologies:</h3>
                     <p>
-                        Front End part of XPNS web application built on React. Bulma for main styling and SASS for additional styles. React-Router for routing. Redux for state management. 
+                        Front End part of XPNS web application built on React. Bulma for main styling and SASS for additional styles. React-Router for routing. Redux for state management.
                     </p>
                     <p>
                         Back End part of XPNS build on NodeJS framework Express. Authentication using JWT, BCrypt and Cookies. . And cloud stored coaster of PostgresSQL database and Sequelize ORM.

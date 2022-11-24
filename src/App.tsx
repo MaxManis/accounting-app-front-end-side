@@ -34,7 +34,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const userFromStorage = localStorage.getItem('user');
-        if (!userFromStorage || !Cookies.get('token')) {
+        if (!userFromStorage) {
             dispatch(setUser(null));
             localStorage.removeItem('user');
         }
