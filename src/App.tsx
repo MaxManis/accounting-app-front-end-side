@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes, useNavigate} from 'react-router-dom';
 import './App.css';
 import 'bulma';
 import { LoginForm } from './components/LoginForm'
@@ -8,19 +8,21 @@ import { ExpensesList } from './components/ExpensesList';
 import { CreateExpense } from './components/CreateExpense';
 import { PageNotFound } from './components/PageNotFound';
 import { Footer } from "./components/Footer";
-import {SingUpForm} from "./components/SingUpForm";
-import {HomePage} from "./components/HomePage";
-import {AboutProject} from "./components/AboutProject";
-import Cookies from 'js-cookie';
-import { useAppDispatch } from './app/hooks';
+import { SingUpForm } from "./components/SingUpForm";
+import { HomePage } from "./components/HomePage";
+import { AboutProject } from "./components/AboutProject";
+import {useAppDispatch, useAppSelector} from './app/hooks';
 import { setUser } from './features/user/userSlice';
 import { ActivateAccount } from './components/ActivateAccount';
 import { AboutAuthor } from './components/AboutAuthor';
 import { CreateCategory } from './components/CreateCategory';
 import { CreateFAQ } from './components/CreateFAQ';
+import { MyProfile } from "./components/MyProfile";
+import Cookies from 'js-cookie';
 
 const App: React.FC = () => {
     const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state => state.user));
 
     useEffect(() => {
         const userFromStorage = localStorage.getItem('user');
@@ -29,6 +31,14 @@ const App: React.FC = () => {
             dispatch(setUser(JSON.parse(userFromStorage)))
         }
     }, []);
+
+    useEffect(() => {
+        const userFromStorage = localStorage.getItem('user');
+        if (!userFromStorage || !Cookies.get('token')) {
+            dispatch(setUser(null));
+            localStorage.removeItem('user');
+        }
+    }, [user])
 
     return (
       <div className="app">
@@ -51,13 +61,16 @@ const App: React.FC = () => {
                     <Route path="author" element={<AboutAuthor />} />
                   </Route>
 
+                  <Route path="/my-profile" element={<MyProfile />} />
+
                   <Route path="/login" element={<LoginForm />} />
 
                   <Route path="/singup" element={<SingUpForm />} />
 
+                  <Route path="/activate/:token" element={<ActivateAccount />} />
+
                   <Route path="*" element={<PageNotFound />} />
 
-                  <Route path="/activate/:token" element={<ActivateAccount />} />
               </Routes>
           </div>
 

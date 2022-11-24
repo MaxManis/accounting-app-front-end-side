@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const BASE_URL = 'https://kind-pink-bullfrog-cap.cyclic.app';
+// prod server:
+// const BASE_URL = 'https://kind-pink-bullfrog-cap.cyclic.app';
 // dev server:
-// const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'http://localhost:8000';
 
 function wait(delay: number) {
     return new Promise(resolve => {

@@ -5,12 +5,14 @@ import { getCategoriesAsync } from "../../features/categories/categoriesSlice";
 import { client } from "../../utils/fetch";
 import { ErrorMessage } from "../ErrorMessage";
 import { Loader } from "../Loader";
+import {SuccessLabel} from "../SuccessLabel";
 
 export const CreateCategory: React.FC = () => {
     const [category, setCategory] = useState('');
     const [nameError, setNameError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const { user } = useAppSelector((state => state.user))
     const dispatch = useAppDispatch();
@@ -26,8 +28,12 @@ export const CreateCategory: React.FC = () => {
                 return;
             }
 
-            await client.post('/categories', { userid: user?.id, name: category })
-            await dispatch(getCategoriesAsync({ id: user?.id }))
+            await client.post('/categories', { userid: user?.id, name: category });
+            await dispatch(getCategoriesAsync({ id: user?.id }));
+            setIsSuccess(true);
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 3000);
         } catch (error) {
             setIsError(true);
         }
@@ -44,7 +50,7 @@ export const CreateCategory: React.FC = () => {
             }}
         >
             <div className="field">
-                <label className="label">New category name</label>
+                <label className="label has-text-success">New category name</label>
                 <div className="control has-icons-left has-icons-right">
                     <input
                         className={classNames('input', {
@@ -78,6 +84,8 @@ export const CreateCategory: React.FC = () => {
                     {isLoading ? <Loader /> : 'Create'}
                 </button>
             </div>
+
+            {isSuccess && <SuccessLabel />}
 
             {isError && <ErrorMessage />}
         </form>

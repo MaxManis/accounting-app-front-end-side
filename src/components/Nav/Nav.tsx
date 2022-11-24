@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
-import './Nav.css'
+import './Nav.scss'
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUser } from "../../features/user/userSlice";
 import { client } from "../../utils/fetch";
+import {Loader} from "../Loader";
 
 export const Nav: React.FC = () => {
     const [mobileMenu, setMobileMenu] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const { user } = useAppSelector(
         (state => state.user),
     );
@@ -19,9 +21,11 @@ export const Nav: React.FC = () => {
     }
 
     const logoutUser = async () => {
+        setIsLoading(true);
         await client.get('/users/logout');
         dispatch(setUser(null));
         localStorage.removeItem('user');
+        setIsLoading(false);
         routeChange();
         window.location.reload();
     }
@@ -161,13 +165,22 @@ export const Nav: React.FC = () => {
                                 </>
                             ) : (
                                 <>
-                                <button
-                                    className="button is-success is-light"
-                                    onClick={logoutUser}
-                                >
-                                    Log out
-                                </button>
-                                <span className="button is-success">{user.name}</span>
+                                    <button
+                                        className="button is-success is-light"
+                                        onClick={logoutUser}
+                                    >
+                                        {isLoading ? <Loader /> : 'Log out'}
+                                    </button>
+
+                                    <Link
+                                        to="/my-profile"
+                                        className={classNames('button', {
+                                            'is-success': user.active,
+                                            'is-warning': !user.active,
+                                        })}
+                                    >
+                                        {user.name}
+                                    </Link>
                                 </>
                             )}
                         </div>

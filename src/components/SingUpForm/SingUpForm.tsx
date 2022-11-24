@@ -60,6 +60,8 @@ export const SingUpForm: React.FC = () => {
                 formSubmit();
             }}
         >
+            <h1 className="title is-3 has-text-success">Sing up</h1>
+            <hr />
             <div className="field">
                 <label className="label">Username</label>
                 <div className="control has-icons-left has-icons-right">
@@ -83,7 +85,7 @@ export const SingUpForm: React.FC = () => {
                         }}
                     />
                     <span className="icon is-small is-left">
-                    <i className="fas fa-user"></i>
+                        <i className="fas fa-user"></i>
                     </span>
                 </div>
                 {userNameError && (
@@ -116,7 +118,7 @@ export const SingUpForm: React.FC = () => {
                         }}
                     />
                     <span className="icon is-small is-left">
-                    <i className="fas fa-envelope"></i>
+                        <i className="fas fa-envelope"></i>
                     </span>
                 </div>
                 {emailError && (
@@ -148,7 +150,7 @@ export const SingUpForm: React.FC = () => {
                         }}
                     />
                     <span className="icon is-small is-left">
-                    <i className="fas fa-lock"></i>
+                        <i className="fas fa-lock"></i>
                     </span>
                 </p>
                 {password1Error && (
@@ -174,7 +176,7 @@ export const SingUpForm: React.FC = () => {
                         }}
                         onBlur={() => {
                             if (password2 !== password1) {
-                                setPassword1Error(true);
+                                setPassword2Error(true);
                             }
                         }}
                     />
@@ -199,7 +201,14 @@ export const SingUpForm: React.FC = () => {
             <div className="field is-grouped">
                 <div className="control">
                     <button type="submit" className="button is-success">
-                        {isLoading ? <Loader /> : 'Submit'}
+                        {isLoading ? <Loader /> : (
+                            <>
+                                Submit
+                                <span className="ml-1 mr-0 icon">
+                                    <i className="fas fa-user-plus"></i>
+                                </span>
+                            </>
+                        )}
                     </button>
                 </div>
                 <div className="control">
@@ -208,7 +217,12 @@ export const SingUpForm: React.FC = () => {
                         className="button is-link is-light"
                         onClick={formReset}
                     >
-                        Clear
+                        <>
+                            Clear
+                            <span className="ml-1 mr-0 icon">
+                                <i className="fas fa-undo-alt"></i>
+                            </span>
+                        </>
                     </button>
                 </div>
             </div>

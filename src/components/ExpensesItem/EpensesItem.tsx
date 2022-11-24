@@ -9,10 +9,10 @@ type Props = {
 
 export const ExpensesItem: React.FC<Props> = ({ expense }) => {
     const dispatch = useAppDispatch();
-
     const setCurrentExpense = () => {
         dispatch(expensesSlice.setExpense(expense));
     };
+    const { title, note, spentat, amount, category } = expense;
 
     return (
         <div className="box">
@@ -20,11 +20,13 @@ export const ExpensesItem: React.FC<Props> = ({ expense }) => {
                 <div className="media-content">
                     <div className="content">
                         <p>
-                            <small>Title:</small><strong> {expense.title} </strong>
+                            <small>Title:</small><strong> {title} </strong>
                             <br />
-                            <small>Note:</small><strong> {expense.note || 'No additional info for this expense'}</strong>
+                            <small>Note:</small><strong> {note || 'No additional info for this expense'}</strong>
                             <br />
-                            <small>Amount:</small><strong> ${expense.amount}</strong> spent at <strong>{expense.spentat}</strong>
+                            <small>Amount:</small><strong> ${amount}</strong> spent at <strong>{spentat}</strong>
+                            <br />
+                            <small>Category:</small><strong> {category}</strong>
                         </p>
                     </div>
                 </div>

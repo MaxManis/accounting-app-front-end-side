@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import * as expensesSlice from '../../features/expenses/expensesSlice';
 import { getCategoriesAsync } from '../../features/categories/categoriesSlice';
 import { useNavigate } from "react-router-dom";
+import { SuccessLabel } from "../SuccessLabel";
+import {ActivationHelper} from "../ActivationHelper";
 
 export const CreateExpense: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -23,17 +25,20 @@ export const CreateExpense: React.FC = () => {
     const [amount, setAmount] = useState(0);
     const [amountErr, setAmountErr] = useState(false);
     const [category, setCategory] = useState('');
+    const [categoryError, setCategoryError] = useState(false);
     const [note, setNote] = useState('');
     const [spentat, setSpentAt] = useState('');
     const [spentAtErr, setSpentAtErr] = useState(false);
     const [formErr, setFormErr] = useState(false);
     const [loadError, setLoadError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     let navigate = useNavigate();
     const routeChange = () => {
         navigate('/');
-    }
+    };
 
     useEffect(() => {
         const localUser = localStorage.getItem('user');
@@ -67,6 +72,10 @@ export const CreateExpense: React.FC = () => {
             if (user) {
                 await dispatch(expensesSlice.getExpensesAsync({ id: user.id }));
             }
+            setIsSuccess(true);
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 3000);
             formClear();
         } catch (e) {
             setLoadError(true);
@@ -88,8 +97,8 @@ export const CreateExpense: React.FC = () => {
     const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (titleErr || amountErr || spentAtErr
-            || !title || !amount || !spentat
+        if (titleErr || amountErr || spentAtErr || !title
+            || !amount || !spentat || categoryError || !category
         ) {
             setFormErr(true);
             setTimeout(() => {
@@ -116,6 +125,10 @@ export const CreateExpense: React.FC = () => {
                 className="box"
                 onSubmit={formSubmit}
             >
+                <h1 className="title is-4 has-text-success">Create expense</h1>
+
+                <hr />
+
                 <div className="field">
                     <label className="label">Title</label>
                     <div className="control">
@@ -174,32 +187,46 @@ export const CreateExpense: React.FC = () => {
                     <label className="label">Category</label>
                     <div className="control">
                         {(categoriesStatus === 'idle' && !categories?.length) ? (
-                            <p className="notification is-warning">You dont have any categories for your expenses. Create your first category!</p>
+                            <p className="notification is-warning">
+                                You dont have any categories for your expenses. Create your first category!
+                            </p>
                         ) : (
-                            <div className="select">
-                                {categoriesStatus === 'loading' && (
-                                    <Loader />
-                                )}
+                            <>
+                                <div className="select">
+                                    {categoriesStatus === 'loading' && (
+                                        <Loader />
+                                    )}
 
-                                {categories && (
-                                    <select
-                                        onChange={e => {
-                                            setCategory(_ => e.target.value);
-                                            console.log(category)
-                                        }}
-                                        value={category}
-                                    >
-                                        {categories?.map(item => (
-                                            <option
-                                                key={item.id}
-                                                value={item.name}
-                                            >
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {categories && (
+                                        <select
+                                            onChange={e => {
+                                                setCategoryError(false);
+                                                setCategory(_ => e.target.value);
+                                            }}
+                                            onBlur={() => {
+                                                if (!category) {
+                                                    setCategoryError(true);
+                                                }
+                                            }}
+                                            value={category}
+                                        >
+                                            <option disabled value="">Choose a category</option>
+                                            {categories?.map(item => (
+                                                <option
+                                                    key={item.id}
+                                                    value={item.name}
+                                                >
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
+
+                                {categoryError && (
+                                    <p className="help is-danger">Category required!</p>
                                 )}
-                            </div>
+                            </>
                         )}
 
                     </div>
@@ -213,9 +240,7 @@ export const CreateExpense: React.FC = () => {
                             type="text"
                             placeholder="Something about this item..."
                             value={note}
-                            onChange={(e) => {
-                                setNote(e.target.value)
-                            }}
+                            onChange={(e) => setNote(e.target.value)}
                         />
                     </div>
                 </div>
@@ -246,18 +271,38 @@ export const CreateExpense: React.FC = () => {
                     </div>
                 </div>
 
-                <button
-                    className="button is-success"
-                    type="submit"
-                    disabled={isLoading}
-                >
-                    {isLoading ? (
-                        <Loader />
-                    ) : 'Create'}
-                </button>
+                {user?.active ? (
+                    <button
+                        className="button is-success"
+                        type="submit"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <Loader />
+                        ) : 'Create'}
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        className="button is-warning"
+                        onClick={() => {
+                            setShowHelp(true);
+                            setTimeout(() => {
+                                setShowHelp(false);
+                            }, 15000)
+                        }}
+                    >
+                        Verify your account to create an Expense!
+                    </button>
+                )}
+
+                {showHelp && <ActivationHelper />}
+
                 {formErr && (
                     <p className="help is-danger">Data is invalid, please check it and try again!</p>
                 )}
+
+                {isSuccess && <SuccessLabel />}
             </form>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getUserAsync } from "../../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,17 @@ export const LoginForm: React.FC = () => {
       navigate('/');
     }
 
+    const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await dispatch(getUserAsync({ email, password }));
+
+        if (!localStorage.getItem('user')) {
+            return;
+        }
+
+        routeChange();
+    }
+
     useEffect(() => {
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
@@ -24,25 +35,18 @@ export const LoginForm: React.FC = () => {
 
     return (
         <form
-            className="box"
-            onSubmit={async (e) => {
-                e.preventDefault();
-                await dispatch(getUserAsync({ email, password }));
-
-                if (!localStorage.getItem('user')) {
-                    return;
-                }
-
-                routeChange();
-            }}
+            className="box column is-4 is-offset-4"
+            onSubmit={formSubmit}
         >
+            <h1 className="title is-3 has-text-success has-text-centered">Login</h1>
+            <hr />
             <div className="field">
                 <label className="label">Email</label>
                 <div className="control">
                     <input
                         className="input"
                         type="email"
-                        placeholder="e.g. alex@example.com"
+                        placeholder="you@xpns.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -62,8 +66,20 @@ export const LoginForm: React.FC = () => {
                 </div>
             </div>
 
-            <button disabled={status === 'loading'} className="button is-success">
-                {status === 'loading' ? <Loader /> : 'Sign in'}</button>
+            <button
+                disabled={status === 'loading'}
+                className="button is-success is-fullwidth"
+            >
+
+                {status === 'loading' ? <Loader /> : (
+                    <>
+                        Log in
+                        <span className="ml-1 icon">
+                            <i className="fas fa-sign-in-alt"></i>
+                        </span>
+                    </>
+                )}
+            </button>
 
             <div className="field"></div>
 
