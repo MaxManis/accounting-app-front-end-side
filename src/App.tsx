@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {Route, Routes, useNavigate} from 'react-router-dom';
+import {Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bulma';
 import { LoginForm } from './components/LoginForm'
@@ -18,7 +18,6 @@ import { AboutAuthor } from './components/AboutAuthor';
 import { CreateCategory } from './components/CreateCategory';
 import { CreateFAQ } from './components/CreateFAQ';
 import { MyProfile } from "./components/MyProfile";
-import Cookies from 'js-cookie';
 
 const App: React.FC = () => {
     const dispatch = useAppDispatch();
